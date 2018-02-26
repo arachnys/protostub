@@ -6,15 +6,20 @@ import (
 
 type EnumVisitor struct {
 	ProtoData
-	message *Message
-	members []Member
+	Enum Enum
+}
+
+func NewEnumVisitor() *EnumVisitor {
+	return &EnumVisitor{
+		ProtoData: ProtoData{},
+	}
 }
 
 func (ev *EnumVisitor) VisitEnumField(e *proto.EnumField) {
 	// all enum members are of type bool in python
 	// this is mostly just because they only need to exist, and not store any
 	// actual value
-	ev.members = append(ev.members, Member{e.Name, "bool"})
+	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, "bool"})
 }
 
 func (ev *EnumVisitor) VisitEnum(e *proto.Enum) {

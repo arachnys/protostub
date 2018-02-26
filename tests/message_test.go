@@ -8,6 +8,34 @@ import (
 	"github.com/arachnys/protostub"
 )
 
+func expectMembers(t *testing.T, m *protostub.Message, expected map[string]bool) {
+	for _, i := range m.Members {
+		expected[fmt.Sprintf("%s %s", i.Typename(), i.Name())] = true
+	}
+
+	for _, v := range expected {
+		if !v {
+			t.Fatal("Not all members found")
+		}
+	}
+}
+
+func parse(t *testing.T, source string, types int) *protostub.ProtoData {
+	p := protostub.New(strings.NewReader(source))
+
+	err := p.Parse()
+
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(p.Types) != 1 {
+		t.Fatal("Failed to parse proto ok")
+	}
+
+	return p
+}
+
 // Just test that a message can be visited and the name is read all OK
 func TestVisitMessage(t *testing.T) {
 	proto := [][]string{
@@ -45,24 +73,14 @@ func TestMessageMembers(t *testing.T) {
 	}
 	`
 
+	p := parse(t, proto, 1)
+
 	results := map[string]bool{
 		"string thing":       false,
 		"string other_thing": false,
 		"Timestamp time":     false,
 		"uint64 number":      false,
 		"Bar bar":            false,
-	}
-
-	p := protostub.New(strings.NewReader(proto))
-
-	err := p.Parse()
-
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if len(p.Types) != 1 {
-		t.Fatal("Failed to parse proto ok")
 	}
 
 	if p.Types[0].Name() != "Foo" {
@@ -75,13 +93,54 @@ func TestMessageMembers(t *testing.T) {
 		t.Fatal("Failed to read message ok")
 	}
 
-	for _, i := range message.Members {
-		results[fmt.Sprintf("%s %s", i.Typename(), i.Name())] = true
+	expectMembers(t, message, results)
+}
+
+func TestMessageWithChildEnum(t *testing.T) {
+	proto := `
+	message Foo {
+		enum Bar {
+			A = 0;
+			B = 1;
+			C = 2;
+		}
+		Bar bar = 2;
+
+		string name = 3;
+	}
+	`
+
+	p := parse(t, proto, 1)
+
+	message, ok := p.Types[0].(*protostub.Message)
+
+	if !ok {
+		t.Fatal("Failed to read message ok")
 	}
 
-	for _, v := range results {
+	if len(message.Members) != 2 {
+		t.Fatal("Failed to read message members")
+	}
+
+	if len(message.Types) != 1 {
+		t.Fatal("Failed to read message subtypes")
+	}
+
+	fmt.Println(message.Types[0].Name())
+
+	expected := map[string]bool{
+		"A": false,
+		"B": false,
+		"C": false,
+	}
+
+	for _, i := range message.Types[0].(*protostub.Enum).Members {
+		expected[i.Name()] = true
+	}
+
+	for _, v := range expected {
 		if !v {
-			t.Fatal("Not all members found", results)
+			t.Fatal("Failed to read enum properly")
 		}
 	}
 }

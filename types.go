@@ -22,6 +22,8 @@ type Service struct {
 }
 
 type Enum struct {
+	name    string
+	Members []Member
 }
 
 func (m Member) Name() string     { return m.name }
@@ -32,6 +34,9 @@ func (m Message) Typename() string { return m.name }
 
 func (s Service) Name() string     { return s.name }
 func (s Service) Typename() string { return s.name }
+
+func (s Enum) Name() string     { return s.name }
+func (s Enum) Typename() string { return s.name }
 
 // TODO: Move this to be part of the gen package
 //func (cv *classVisitor) String() string {

@@ -27,16 +27,6 @@ func (mv *MessageVisitor) addMember(m Member) {
 	mv.message.Members = append(mv.message.Members, m)
 }
 
-func (mv *MessageVisitor) VisitMessage(m *proto.Message) {
-	smv := NewMessageVisitor(m.Name)
-
-	for _, i := range m.Elements {
-		i.Accept(smv)
-	}
-
-	mv.message.Types = append(mv.message.Types, smv.message)
-}
-
 func (mv *MessageVisitor) VisitNormalField(n *proto.NormalField) {
 	name := n.Name
 	var typename string

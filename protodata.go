@@ -78,6 +78,7 @@ func (v *ProtoData) VisitMessage(m *proto.Message) {
 	}
 
 	v.Types = append(v.Types, mv.message)
+	mv.message.Types = mv.Types
 }
 
 func (v *ProtoData) VisitSyntax(s *proto.Syntax) {
@@ -116,6 +117,11 @@ func (v *ProtoData) VisitEnumField(e *proto.EnumField) {
 }
 
 func (v *ProtoData) VisitEnum(e *proto.Enum) {
+	ev := NewEnumVisitor()
+
+	e.Accept(ev)
+
+	v.Types = append(v.Types, &ev.Enum)
 }
 
 func (v *ProtoData) VisitComment(c *proto.Comment) {
