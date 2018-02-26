@@ -12,8 +12,8 @@ type Member struct {
 
 type Message struct {
 	name    string
-	types   []ProtoType
-	members []Member
+	Types   []ProtoType
+	Members []Member
 }
 
 type Service struct {

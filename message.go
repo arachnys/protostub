@@ -16,7 +16,7 @@ func NewMessageVisitor(name string) *MessageVisitor {
 		ProtoData: ProtoData{},
 		message: &Message{
 			name:  name,
-			types: make([]ProtoType, 0),
+			Types: make([]ProtoType, 0),
 		},
 	}
 
@@ -24,7 +24,7 @@ func NewMessageVisitor(name string) *MessageVisitor {
 }
 
 func (mv *MessageVisitor) addMember(m Member) {
-	mv.message.members = append(mv.message.members, m)
+	mv.message.Members = append(mv.message.Members, m)
 }
 
 func (mv *MessageVisitor) VisitMessage(m *proto.Message) {
@@ -34,7 +34,7 @@ func (mv *MessageVisitor) VisitMessage(m *proto.Message) {
 		i.Accept(smv)
 	}
 
-	mv.message.types = append(mv.message.types, smv.message)
+	mv.message.Types = append(mv.message.Types, smv.message)
 }
 
 func (mv *MessageVisitor) VisitNormalField(n *proto.NormalField) {
