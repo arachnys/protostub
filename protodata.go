@@ -11,17 +11,19 @@ import (
 // I try to have a visitor per "major" type - message, service, enum, etc.
 // This base Visitor handles the basic stuff.
 type ProtoData struct {
+	Types []ProtoType
+
 	// why not set? please?
 	imports map[string]bool
 
 	// depth is incremented for each class definition
 	r     io.Reader
 	depth int
-	types []ProtoType
 }
 
 func New(r io.Reader) *ProtoData {
 	return &ProtoData{
+		Types:   make([]ProtoType, 0),
 		depth:   0,
 		imports: make(map[string]bool),
 		r:       r,
@@ -75,7 +77,7 @@ func (v *ProtoData) VisitMessage(m *proto.Message) {
 		i.Accept(mv)
 	}
 
-	v.types = append(v.types, mv.message)
+	v.Types = append(v.Types, mv.message)
 }
 
 func (v *ProtoData) VisitSyntax(s *proto.Syntax) {

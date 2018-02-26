@@ -20,5 +20,13 @@ func TestVisitMessage(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
+		if len(v.Types) != 1 {
+			t.Fatal("Failed to parse message")
+		}
+
+		if v.Types[0].Name() != i[1] {
+			t.Fatal("Failed to read message name")
+		}
 	}
 }
