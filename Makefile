@@ -9,11 +9,11 @@ V := 1 # When V is set, print commands and build progress.
 IGNORED_PACKAGES := /vendor/
 
 .PHONY: all
-all: proto-stub cmd
+all: visitors cmd
 
-.PHONY: proto-stub
-proto-stub: .GOPATH/.ok
-	$Q go install $(if $V,-v) $(VERSION_FLAGS) $(IMPORT_PATH)
+.PHONY: visitors
+visitors: .GOPATH/.ok
+	$Q go install $(if $V,-v) $(VERSION_FLAGS) $(IMPORT_PATH)/visitors
 
 .PHONY: cmd
 cmd: .GOPATH/.ok

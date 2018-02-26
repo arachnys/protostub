@@ -9,7 +9,7 @@ import (
 
 	"github.com/emicklei/proto"
 
-	"github.com/arachnys/protostub"
+	"github.com/arachnys/protostub/visitors"
 )
 
 type stringSlice []string
