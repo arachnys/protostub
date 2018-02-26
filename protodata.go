@@ -10,21 +10,39 @@ import (
 // This is the main visitor, which passes off to the other ones.
 // I try to have a visitor per "major" type - message, service, enum, etc.
 // This base Visitor handles the basic stuff.
-type Visitor struct {
+type ProtoData struct {
 	// why not set? please?
 	imports map[string]bool
 
 	// depth is incremented for each class definition
+	r     io.Reader
 	depth int
 	types []ProtoType
 }
 
-func NewVisitor(w io.Writer) *Visitor {
-	return &Visitor{
+func New(r io.Reader) *ProtoData {
+	return &ProtoData{
 		depth:   0,
 		imports: make(map[string]bool),
+		r:       r,
 	}
 
+}
+
+func (v *ProtoData) Parse() error {
+	p := proto.NewParser(v.r)
+
+	pr, err := p.Parse()
+
+	if err != nil {
+		return err
+	}
+
+	for _, i := range pr.Elements {
+		i.Accept(v)
+	}
+
+	return nil
 }
 
 // TODO: make sure everything is here
@@ -44,13 +62,13 @@ func TranslateType(t string) string {
 	return split[len(split)-1]
 }
 
-func (v *Visitor) writeDepth(w io.Writer) {
+func (v *ProtoData) writeDepth(w io.Writer) {
 	for i := 0; i < v.depth; i++ {
 		w.Write([]byte("\t"))
 	}
 }
 
-func (v *Visitor) VisitMessage(m *proto.Message) {
+func (v *ProtoData) VisitMessage(m *proto.Message) {
 	mv := NewMessageVisitor(m.Name)
 
 	for _, i := range m.Elements {
@@ -60,16 +78,16 @@ func (v *Visitor) VisitMessage(m *proto.Message) {
 	v.types = append(v.types, mv.message)
 }
 
-func (v *Visitor) VisitSyntax(s *proto.Syntax) {
+func (v *ProtoData) VisitSyntax(s *proto.Syntax) {
 }
 
-func (v *Visitor) VisitPackage(p *proto.Package) {
+func (v *ProtoData) VisitPackage(p *proto.Package) {
 }
 
-func (v *Visitor) VisitOption(o *proto.Option) {
+func (v *ProtoData) VisitOption(o *proto.Option) {
 }
 
-func (v *Visitor) VisitImport(i *proto.Import) {
+func (v *ProtoData) VisitImport(i *proto.Import) {
 	// a bit of a hack, yet perhaps it will work?
 	// then remove the specific file, so we just have the path of the package
 	split := strings.Split(i.Filename, "/")
@@ -88,41 +106,41 @@ func (v *Visitor) VisitImport(i *proto.Import) {
 	v.imports[path] = true
 }
 
-func (v *Visitor) VisitNormalField(n *proto.NormalField) {
+func (v *ProtoData) VisitNormalField(n *proto.NormalField) {
 }
 
-func (v *Visitor) VisitEnumField(e *proto.EnumField) {
+func (v *ProtoData) VisitEnumField(e *proto.EnumField) {
 	panic("Cannot visit enum field")
 }
 
-func (v *Visitor) VisitEnum(e *proto.Enum) {
+func (v *ProtoData) VisitEnum(e *proto.Enum) {
 }
 
-func (v *Visitor) VisitComment(c *proto.Comment) {
+func (v *ProtoData) VisitComment(c *proto.Comment) {
 }
 
-func (v *Visitor) VisitOneof(o *proto.Oneof) {
+func (v *ProtoData) VisitOneof(o *proto.Oneof) {
 	panic("Cannot visit oneof")
 }
 
-func (v *Visitor) VisitOneofField(o *proto.OneOfField) {
+func (v *ProtoData) VisitOneofField(o *proto.OneOfField) {
 	panic("Cannot visit oneof field")
 }
 
-func (v *Visitor) VisitReserved(r *proto.Reserved) {
+func (v *ProtoData) VisitReserved(r *proto.Reserved) {
 }
 
-func (v *Visitor) VisitService(r *proto.Service) {
+func (v *ProtoData) VisitService(r *proto.Service) {
 }
 
-func (v *Visitor) VisitRPC(r *proto.RPC) {
+func (v *ProtoData) VisitRPC(r *proto.RPC) {
 }
 
-func (v *Visitor) VisitMapField(m *proto.MapField) {
+func (v *ProtoData) VisitMapField(m *proto.MapField) {
 }
 
-func (v *Visitor) VisitGroup(g *proto.Group) {
+func (v *ProtoData) VisitGroup(g *proto.Group) {
 }
 
-func (v *Visitor) VisitExtensions(e *proto.Extensions) {
+func (v *ProtoData) VisitExtensions(e *proto.Extensions) {
 }

@@ -7,13 +7,13 @@ import (
 )
 
 type MessageVisitor struct {
-	Visitor // in case of submessages and the like
+	ProtoData
 	message *Message
 }
 
 func NewMessageVisitor(name string) *MessageVisitor {
 	cv := &MessageVisitor{
-		Visitor: Visitor{},
+		ProtoData: ProtoData{},
 		message: &Message{
 			name:  name,
 			types: make([]ProtoType, 0),

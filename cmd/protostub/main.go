@@ -6,10 +6,6 @@ import (
 	"io"
 	"os"
 	"strings"
-
-	"github.com/emicklei/proto"
-
-	"github.com/arachnys/protostub/visitors"
 )
 
 type stringSlice []string
@@ -26,20 +22,6 @@ func (s *stringSlice) Set(value string) error {
 }
 
 func convert(r io.Reader, w io.Writer) error {
-	p := proto.NewParser(r)
-
-	pr, err := p.Parse()
-
-	if err != nil {
-		return err
-	}
-
-	visitor := protostub.NewVisitor(w)
-
-	for _, i := range pr.Elements {
-		i.Accept(visitor)
-	}
-
 	return nil
 }
 

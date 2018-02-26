@@ -5,7 +5,7 @@ import (
 )
 
 type EnumVisitor struct {
-	Visitor
+	ProtoData
 	message *Message
 	members []Member
 }
