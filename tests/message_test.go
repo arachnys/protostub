@@ -3,6 +3,8 @@ package protostub
 import (
 	"strings"
 	"testing"
+
+	"github.com/arachnys/protostub"
 )
 
 // Just test that a message can be visited and the name is read all OK
@@ -14,7 +16,7 @@ func TestVisitMessage(t *testing.T) {
 	}
 
 	for _, i := range proto {
-		v := New(strings.NewReader(i[0]))
+		v := protostub.New(strings.NewReader(i[0]))
 		err := v.Parse()
 
 		if err != nil {
