@@ -14,7 +14,7 @@ import (
 // using string comparison could make the test too brittle
 // conversely, that could be exactly what is needed!
 
-var sampleProto1 = `
+var simpleProto = `
 message Foo {
     string bar = 1;
     int32 baz = 2;
@@ -24,13 +24,24 @@ message Foo {
 // these are written without newlines or spaces
 // while this makes the tests less comprehensive, it also makes them **far** less
 // brittle and horrible to write.
-var sampleMypy1 = "classFoo:bar:stringbaz:int"
+var simpleMypy = "classFoo:bar:stringbaz:int"
+
+var enumProto = `
+enum Foo {
+	BAR = 0;
+	BAZ = 1;
+	QUUX = 2;
+}
+`
+
+var enumMypy = "classFoo:BAR:boolBAZ:boolQUUX:bool"
 
 var tests = [][]string{
-	{sampleProto1, sampleMypy1},
+	{simpleProto, simpleMypy},
+	{enumProto, enumMypy},
 }
 
-func TestMessageGeneration(t *testing.T) {
+func TestGeneration(t *testing.T) {
 	for _, i := range tests {
 		proto := i[0]
 		mypy := i[1]
