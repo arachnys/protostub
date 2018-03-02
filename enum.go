@@ -23,6 +23,8 @@ func (ev *EnumVisitor) VisitEnumField(e *proto.EnumField) {
 }
 
 func (ev *EnumVisitor) VisitEnum(e *proto.Enum) {
+	ev.Enum.name = e.Name
+
 	for _, i := range e.Elements {
 		i.Accept(ev)
 	}
