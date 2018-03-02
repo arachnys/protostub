@@ -32,11 +32,13 @@ func enumToClass(e *protostub.Enum) *classData {
 
 // generate a mypy/python class
 func (g *generator) genClass(c *classData) error {
-	err := g.indent()
+	_, err := g.bw.WriteRune('\n')
 
 	if err != nil {
 		return err
 	}
+
+	err = g.indent()
 
 	_, err = g.bw.WriteString(fmt.Sprintf("class %s:\n", c.name))
 
