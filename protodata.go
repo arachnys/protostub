@@ -28,7 +28,6 @@ func New(r io.Reader) *ProtoData {
 		imports: make(map[string]bool),
 		r:       r,
 	}
-
 }
 
 func (v *ProtoData) Parse() error {
@@ -49,8 +48,18 @@ func (v *ProtoData) Parse() error {
 
 // TODO: make sure everything is here
 var typeMap = map[string]string{
-	"int32": "int",
-	"int64": "int",
+	"int32":    "int",
+	"int64":    "int",
+	"double":   "float",
+	"uint32":   "int",
+	"uint64":   "int",
+	"sint32":   "int",
+	"sint64":   "int",
+	"fixed32":  "int",
+	"fixed64":  "int",
+	"sfixed32": "int",
+	"sfixed64": "int",
+	"bytes":    "str",
 }
 
 // takes a protobuf primitive type, makes it a python primitive type
@@ -71,7 +80,11 @@ func (v *ProtoData) writeDepth(w io.Writer) {
 }
 
 func (v *ProtoData) VisitMessage(m *proto.Message) {
-	mv := NewMessageVisitor(m.Name, m.IsExtend)
+	if m.Comment == nil {
+		m.Comment = &proto.Comment{Lines: make([]string, 0)}
+	}
+
+	mv := NewMessageVisitor(m.Name, m.IsExtend, m.Comment)
 
 	for _, i := range m.Elements {
 		i.Accept(mv)

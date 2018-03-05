@@ -18,7 +18,7 @@ func NewEnumVisitor() *EnumVisitor {
 func (ev *EnumVisitor) VisitEnumField(e *proto.EnumField) {
 	// using the Any type because of this:
 	// https://github.com/python/typeshed/blob/master/stdlib/3.4/enum.pyi#L31
-	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, "Any"})
+	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, "Any", nil})
 }
 
 func (ev *EnumVisitor) VisitEnum(e *proto.Enum) {

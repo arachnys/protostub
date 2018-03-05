@@ -10,18 +10,20 @@ import (
 // to preserve an amount of distinction between the two - in case of future
 // diversion
 type classData struct {
-	name    string
-	members []protostub.Member
-	types   []protostub.ProtoType
-	extend  bool
+	name     string
+	members  []protostub.Member
+	types    []protostub.ProtoType
+	extend   bool
+	comments []string
 }
 
 func messageToClass(m *protostub.Message) *classData {
 	return &classData{
-		name:    m.Typename(),
-		members: m.Members,
-		types:   m.Types,
-		extend:  m.IsExtend,
+		name:     m.Typename(),
+		members:  m.Members,
+		types:    m.Types,
+		extend:   m.IsExtend,
+		comments: m.Comment,
 	}
 }
 
@@ -45,6 +47,13 @@ func (g *generator) genClass(c *classData) error {
 		return nil
 	}
 
+	if len(c.comments) > 0 {
+		for _, i := range c.comments {
+			g.indent()
+			g.bw.WriteString(fmt.Sprintf("#%s\n", i))
+		}
+	}
+
 	err = g.indent()
 
 	_, err = g.bw.WriteString(fmt.Sprintf("class %s:\n", c.name))
@@ -62,6 +71,11 @@ func (g *generator) genClass(c *classData) error {
 	}()
 
 	for n, i := range c.members {
+		for _, j := range i.Comment {
+			g.indent()
+			g.bw.WriteString(fmt.Sprintf("#%s\n", j))
+		}
+
 		err := g.indent()
 
 		if err != nil {

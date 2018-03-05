@@ -11,13 +11,15 @@ type MessageVisitor struct {
 	message *Message
 }
 
-func NewMessageVisitor(name string, extend bool) *MessageVisitor {
+func NewMessageVisitor(name string, extend bool, comment *proto.Comment) *MessageVisitor {
+
 	cv := &MessageVisitor{
 		ProtoData: ProtoData{},
 		message: &Message{
 			name:     name,
 			Types:    make([]ProtoType, 0),
 			IsExtend: extend,
+			Comment:  comment.Lines,
 		},
 	}
 
@@ -39,10 +41,16 @@ func (mv *MessageVisitor) VisitNormalField(n *proto.NormalField) {
 		typename = fmt.Sprintf("List[%s]", TranslateType(n.Type))
 	}
 
+	if n.Comment == nil {
+		n.Comment = &proto.Comment{Lines: make([]string, 0)}
+	}
+
 	mv.addMember(Member{
 		name:     name,
 		typename: typename,
+		Comment:  n.Comment.Lines,
 	})
+
 }
 
 func (mv *MessageVisitor) VisitOneof(o *proto.Oneof) {

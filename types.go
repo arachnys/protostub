@@ -8,6 +8,7 @@ type ProtoType interface {
 type Member struct {
 	name     string
 	typename string
+	Comment  []string
 }
 
 type Message struct {
@@ -15,6 +16,7 @@ type Message struct {
 	Types    []ProtoType
 	Members  []Member
 	IsExtend bool
+	Comment  []string
 }
 
 type Service struct {
