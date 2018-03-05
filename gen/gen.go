@@ -57,6 +57,8 @@ func (g *generator) gen(p protostub.ProtoType) error {
 		return g.genMessage(t)
 	case *protostub.Enum:
 		return g.genEnum(t)
+	case *protostub.Service:
+		return g.genService(t)
 	}
 
 	return errors.New(fmt.Sprintf("No generator for type %s", reflect.TypeOf(p).Elem().Name()))
@@ -68,4 +70,8 @@ func (g *generator) genMessage(m *protostub.Message) error {
 
 func (g *generator) genEnum(e *protostub.Enum) error {
 	return g.genClass(enumToClass(e))
+}
+
+func (g *generator) genService(s *protostub.Service) error {
+	return g.genClass(serviceToClass(s))
 }

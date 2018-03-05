@@ -10,11 +10,12 @@ import (
 // to preserve an amount of distinction between the two - in case of future
 // diversion
 type classData struct {
-	name     string
-	members  []protostub.Member
-	types    []protostub.ProtoType
-	extend   bool
-	comments []string
+	name      string
+	members   []protostub.Member
+	functions []protostub.Function
+	types     []protostub.ProtoType
+	extend    bool
+	comments  []string
 }
 
 func messageToClass(m *protostub.Message) *classData {
@@ -31,6 +32,16 @@ func enumToClass(e *protostub.Enum) *classData {
 	return &classData{
 		name:    e.Typename(),
 		members: e.Members,
+	}
+}
+
+func serviceToClass(s *protostub.Service) *classData {
+	return &classData{
+		name:      s.Name(),
+		functions: s.Functions,
+		types:     s.Types,
+		extend:    false,
+		comments:  s.Comment,
 	}
 }
 
@@ -97,6 +108,33 @@ func (g *generator) genClass(c *classData) error {
 		}
 	}
 
+	for n, i := range c.functions {
+		for _, j := range i.Comment {
+			g.indent()
+			g.bw.WriteString(fmt.Sprintf("#%s\n", j))
+		}
+
+		err := g.indent()
+
+		if err != nil {
+			return err
+		}
+
+		_, err = g.bw.WriteString(fmt.Sprintf("def %s: ...", i.Typename()))
+
+		if err != nil {
+			return err
+		}
+
+		if n < len(c.functions)-1 {
+			_, err = g.bw.WriteRune('\n')
+
+			if err != nil {
+				return err
+			}
+		}
+	}
+
 	// let's make that constructor
 	g.bw.WriteRune('\n')
 	g.indent()
@@ -108,8 +146,10 @@ func (g *generator) genClass(c *classData) error {
 			continue
 		}
 
-		g.bw.WriteString(fmt.Sprintf("%s: %s = None) -> None: ...\n", i.Name(), i.Typename()))
+		g.bw.WriteString(fmt.Sprintf("%s: %s = None", i.Name(), i.Typename()))
 	}
+
+	g.bw.WriteString(fmt.Sprintf(") -> %s: ...\n", c.name))
 
 	for _, i := range c.types {
 		// enums need to be treated differently

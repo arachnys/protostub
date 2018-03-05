@@ -1,5 +1,10 @@
 package protostub
 
+import (
+	"fmt"
+	"strings"
+)
+
 type ProtoType interface {
 	Name() string
 	Typename() string
@@ -11,6 +16,13 @@ type Member struct {
 	Comment  []string
 }
 
+type Function struct {
+	name       string
+	returnType string
+	parameters []string
+	Comment    []string
+}
+
 type Message struct {
 	name     string
 	Types    []ProtoType
@@ -20,8 +32,10 @@ type Message struct {
 }
 
 type Service struct {
-	name  string
-	types []ProtoType
+	name      string
+	Types     []ProtoType
+	Functions []Function
+	Comment   []string
 }
 
 type Enum struct {
@@ -40,3 +54,8 @@ func (s Service) Typename() string { return s.name }
 
 func (s Enum) Name() string     { return s.name }
 func (s Enum) Typename() string { return s.name }
+
+func (f Function) Name() string { return f.name }
+func (f Function) Typename() string {
+	return fmt.Sprintf("%s(%s) -> %s", f.name, strings.Join(f.parameters, ", "), f.returnType)
+}

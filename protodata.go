@@ -152,6 +152,18 @@ func (v *ProtoData) VisitReserved(r *proto.Reserved) {
 }
 
 func (v *ProtoData) VisitService(r *proto.Service) {
+	if r.Comment == nil {
+		r.Comment = &proto.Comment{Lines: make([]string, 0)}
+	}
+
+	sv := NewServiceVisitor(r.Name, r.Comment)
+
+	for _, i := range r.Elements {
+		i.Accept(sv)
+	}
+
+	v.Types = append(v.Types, sv.service)
+	sv.service.Types = sv.Types
 }
 
 func (v *ProtoData) VisitRPC(r *proto.RPC) {
