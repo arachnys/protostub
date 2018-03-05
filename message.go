@@ -11,12 +11,13 @@ type MessageVisitor struct {
 	message *Message
 }
 
-func NewMessageVisitor(name string) *MessageVisitor {
+func NewMessageVisitor(name string, extend bool) *MessageVisitor {
 	cv := &MessageVisitor{
 		ProtoData: ProtoData{},
 		message: &Message{
-			name:  name,
-			Types: make([]ProtoType, 0),
+			name:     name,
+			Types:    make([]ProtoType, 0),
+			IsExtend: extend,
 		},
 	}
 

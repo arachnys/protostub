@@ -11,9 +11,10 @@ type Member struct {
 }
 
 type Message struct {
-	name    string
-	Types   []ProtoType
-	Members []Member
+	name     string
+	Types    []ProtoType
+	Members  []Member
+	IsExtend bool
 }
 
 type Service struct {

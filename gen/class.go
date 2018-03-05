@@ -13,6 +13,7 @@ type classData struct {
 	name    string
 	members []protostub.Member
 	types   []protostub.ProtoType
+	extend  bool
 }
 
 func messageToClass(m *protostub.Message) *classData {
@@ -20,6 +21,7 @@ func messageToClass(m *protostub.Message) *classData {
 		name:    m.Typename(),
 		members: m.Members,
 		types:   m.Types,
+		extend:  m.IsExtend,
 	}
 }
 
@@ -36,6 +38,11 @@ func (g *generator) genClass(c *classData) error {
 
 	if err != nil {
 		return err
+	}
+
+	if c.extend {
+		fmt.Println("Extensions are not yet supported")
+		return nil
 	}
 
 	err = g.indent()
@@ -76,7 +83,29 @@ func (g *generator) genClass(c *classData) error {
 		}
 	}
 
+	// let's make that constructor
+	g.bw.WriteRune('\n')
+	g.indent()
+	g.bw.WriteString("def __init__(self, ")
+
+	for n, i := range c.members {
+		if n < len(c.members)-1 {
+			g.bw.WriteString(fmt.Sprintf("%s: %s = None, ", i.Name(), i.Typename()))
+			continue
+		}
+
+		g.bw.WriteString(fmt.Sprintf("%s: %s = None) -> None: ...\n", i.Name(), i.Typename()))
+	}
+
 	for _, i := range c.types {
+		// enums need to be treated differently
+		if e, ok := i.(*protostub.Enum); ok {
+			for _, j := range e.Members {
+				g.indent()
+				g.bw.WriteString(fmt.Sprintf("%s: Any\n", j.Name()))
+			}
+		}
+
 		err := g.indent()
 
 		if err != nil {
@@ -88,6 +117,15 @@ func (g *generator) genClass(c *classData) error {
 		if err != nil {
 			return err
 		}
+	}
+
+	// then we just need to generate all the default methods that protoc adds to
+	// python classes
+	defaults := []string{fmt.Sprintf("CopyFrom(self, other: %s) -> Any", c.name), "ListFields() -> Tuple[FieldDescriptor, value]"}
+
+	for _, i := range defaults {
+		g.indent()
+		g.bw.WriteString(fmt.Sprintf("def %s: ...\n", i))
 	}
 
 	return nil

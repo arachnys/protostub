@@ -71,7 +71,7 @@ func (v *ProtoData) writeDepth(w io.Writer) {
 }
 
 func (v *ProtoData) VisitMessage(m *proto.Message) {
-	mv := NewMessageVisitor(m.Name)
+	mv := NewMessageVisitor(m.Name, m.IsExtend)
 
 	for _, i := range m.Elements {
 		i.Accept(mv)

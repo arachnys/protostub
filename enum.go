@@ -16,10 +16,9 @@ func NewEnumVisitor() *EnumVisitor {
 }
 
 func (ev *EnumVisitor) VisitEnumField(e *proto.EnumField) {
-	// all enum members are of type bool in python
-	// this is mostly just because they only need to exist, and not store any
-	// actual value
-	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, "bool"})
+	// using the Any type because of this:
+	// https://github.com/python/typeshed/blob/master/stdlib/3.4/enum.pyi#L31
+	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, "Any"})
 }
 
 func (ev *EnumVisitor) VisitEnum(e *proto.Enum) {
