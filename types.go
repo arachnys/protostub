@@ -5,6 +5,10 @@ import (
 	"strings"
 )
 
+// This contains the types that the in-memory representation of the protobuf
+// will be built out of. Some have associated visitors that will generate them,
+// while others are just components
+
 type ProtoType interface {
 	Name() string
 	Typename() string
@@ -23,6 +27,7 @@ type Function struct {
 	Comment    []string
 }
 
+// see message.go
 type Message struct {
 	name     string
 	Types    []ProtoType
@@ -31,6 +36,7 @@ type Message struct {
 	Comment  []string
 }
 
+// see service.go
 type Service struct {
 	name      string
 	Types     []ProtoType
@@ -38,6 +44,7 @@ type Service struct {
 	Comment   []string
 }
 
+// see enum.go
 type Enum struct {
 	name    string
 	Members []Member
