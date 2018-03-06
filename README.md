@@ -1,4 +1,4 @@
-# protostub ![ci badge](https://travis-ci.org/arachnys/protostub.svg?branch=master)
+# protostub [![](https://img.shields.io/travis/arachnys/protostub.svg?style=flat-square)](https://travis-ci.org/arachnys/protostub) [![](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat-square)](https://godoc.org/github.com/arachnys/protostub)
 
 A tool for generating Mypy type stubs from a Protocol Buffer definition.
 
