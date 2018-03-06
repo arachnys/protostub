@@ -57,9 +57,11 @@ how well it works.
 
 
 ### Docker
-A docker image is also provided! The easiest way for you to use this is as follows:
+A docker image is also provided! The easiest way for you to use this is as follows 
+(assuming there is a file called foo.proto in the current directory):
+
 ```
-docker run arachnysdocker/protostub
+docker run -v $(pwd):/protostub protostub:latest generate -p foo.proto
 ```
 
 After doing this, you should see the help text.
