@@ -2,7 +2,6 @@ package gen
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"reflect"
@@ -20,7 +19,7 @@ type generator struct {
 
 // used to generate mypy stubs from proto data
 
-// writes a mypy type stub to w, generated from the data in p
+// Gen writes a mypy type stub to w, generated from the data in p
 func Gen(w io.Writer, p *protostub.ProtoData) error {
 	gen := &generator{0, bufio.NewWriter(w)}
 
@@ -57,7 +56,7 @@ func (g *generator) gen(p protostub.ProtoType) error {
 		return g.genService(t)
 	}
 
-	return errors.New(fmt.Sprintf("No generator for type %s", reflect.TypeOf(p).Elem().Name()))
+	return fmt.Errorf("No generator for type %s", reflect.TypeOf(p).Elem().Name())
 }
 
 func (g *generator) genMessage(m *protostub.Message) error {

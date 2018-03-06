@@ -4,11 +4,13 @@ import (
 	"github.com/emicklei/proto"
 )
 
+// ServiceVisitor will visit a service and extract the types.
 type ServiceVisitor struct {
 	ProtoData
 	service *Service
 }
 
+// NewServiceVisitor will create a new service visitor, from a name and a comment.
 func NewServiceVisitor(name string, comment *proto.Comment) *ServiceVisitor {
 	sv := &ServiceVisitor{
 		ProtoData: ProtoData{},
@@ -27,6 +29,8 @@ func (sv *ServiceVisitor) addFunction(f Function) {
 	sv.service.Functions = append(sv.service.Functions, f)
 }
 
+// VisitRPC will visit a RPC, and make sure the function specification is included
+// in the service data definition.
 func (sv *ServiceVisitor) VisitRPC(r *proto.RPC) {
 	if r.Comment == nil {
 		r.Comment = &proto.Comment{
