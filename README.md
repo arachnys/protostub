@@ -1,34 +1,12 @@
-# protostub [![](https://img.shields.io/travis/arachnys/protostub.svg?style=flat-square)](https://travis-ci.org/arachnys/protostub) [![](https://img.shields.io/badge/godoc-reference-5272B4.svg?style=flat-square)](https://godoc.org/github.com/arachnys/protostub)
+# protostub [![](https://travis-ci.org/arachnys/protostub.svg?branch=master)](https://travis-ci.org/arachnys/protostub) [![](https://img.shields.io/badge/godoc-reference-5272B4.svg)](https://godoc.org/github.com/arachnys/protostub)
 
 A tool for generating Mypy type stubs from a Protocol Buffer definition.
 
-## Building
-
-### Requirements
-- Go
-- make (optional)
-
-
-### With go get
-If you already have Go all setup in your `PATH`, then it is as simple as:
-
-```
-go get github.com/arachnys/protostub/cmd/protostub
-```
-
-### With Make
-This approach might be best if you're less familiar with Go, and want it to 
-*just work*. It requires no messing with `$GOPATH`.
-
-```
-git clone https://github.com/arachnys/protostub
-cd protostub
-make
-```
-
-The protostub binary should be in the `bin` folder.
-
 ## Usage
+You can download a binary from the
+[releases](https://github.com/arachnys/protostub/releases) page, or you can use 
+[Docker](https://github.com/arachnys/protostub#docker).
+
 Assuming that you have a `.proto` file called `foo.proto` and you want to 
 generate a `.pyi` file from it, usage is as such:
 
@@ -76,6 +54,41 @@ and get functioning type checks!
 An alternative would be to invoke Mypy on a module rather than on files, and 
 provide the stubs in `MYPYPATH`. However, I have not tested this, so I don't know
 how well it works.
+
+
+### Docker
+A docker image is also provided! The easiest way for you to use this is as follows:
+```
+docker run arachnysdocker/protostub
+```
+
+After doing this, you should see the help text.
+
+## Building
+
+### Requirements
+- Go
+- make (optional)
+
+
+### With go get
+If you already have Go all setup in your `PATH`, then it is as simple as:
+
+```
+go get github.com/arachnys/protostub/cmd/protostub
+```
+
+### With Make
+This approach might be best if you're less familiar with Go, and want it to 
+*just work*. It requires no messing with `$GOPATH`.
+
+```
+git clone https://github.com/arachnys/protostub
+cd protostub
+make
+```
+
+The protostub binary should be in the `bin` folder.
 
 ## License
 ```
