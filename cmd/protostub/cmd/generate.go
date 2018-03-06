@@ -38,7 +38,11 @@ var generateCmd = &cobra.Command{
 		}
 
 		defer func() {
-			mf.Close()
+			err := mf.Close()
+
+			if err != nil {
+				panic(err)
+			}
 		}()
 
 		if *verbose {
@@ -52,7 +56,11 @@ var generateCmd = &cobra.Command{
 		}
 
 		defer func() {
-			pf.Close()
+			err := pf.Close()
+
+			if err != nil {
+				panic(err)
+			}
 		}()
 
 		// first parse the protobuf
