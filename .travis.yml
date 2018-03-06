@@ -1,0 +1,26 @@
+language: go
+
+go:
+  - "1.10"
+  - master
+
+install: true
+
+matrix:
+  allow_failures:
+    - go: master
+
+  fast_finish: true
+
+before_script:
+  - GO_FILES=$(find . -iname '*.go' -type f | grep -v /vendor/)
+  - go get github.com/golang/lint/golint
+  - go get honnef.co/go/tools/cmd/megacheck
+  - go get github.com/fzipp/gocyclo
+
+script:
+  - test -z $(gofmt -s -l $GO_FILES)
+  - make test
+  - megacheck ./...
+  - gocyclo -over 19 $GO_FILES
+  - golint -set_exit_status $(go list ./...)
