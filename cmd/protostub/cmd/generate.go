@@ -66,7 +66,7 @@ var generateCmd = &cobra.Command{
 			panic(err)
 		}
 
-		if err := gen.Gen(mf, p); err != nil {
+		if err := gen.Gen(mf, p, true); err != nil {
 			panic(err)
 		}
 	},

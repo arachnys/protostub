@@ -54,7 +54,7 @@ func TestGeneration(t *testing.T) {
 
 		buf := bytes.NewBuffer(nil)
 
-		if err := gen.Gen(buf, p); err != nil {
+		if err := gen.Gen(buf, p, false); err != nil {
 			t.Fatal(err)
 		}
 
