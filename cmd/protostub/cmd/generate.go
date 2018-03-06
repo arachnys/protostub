@@ -38,9 +38,7 @@ var generateCmd = &cobra.Command{
 		}
 
 		defer func() {
-			err := mf.Close()
-
-			if err != nil {
+			if err := mf.Close(); err != nil {
 				panic(err)
 			}
 		}()
@@ -56,24 +54,19 @@ var generateCmd = &cobra.Command{
 		}
 
 		defer func() {
-			err := pf.Close()
-
-			if err != nil {
+			if err := pf.Close(); err != nil {
 				panic(err)
 			}
 		}()
 
 		// first parse the protobuf
 		p := protostub.New(pf)
-		err = p.Parse()
 
-		if err != nil {
+		if err := p.Parse(); err != nil {
 			panic(err)
 		}
 
-		err = gen.Gen(mf, p)
-
-		if err != nil {
+		if err := gen.Gen(mf, p); err != nil {
 			panic(err)
 		}
 	},

@@ -23,9 +23,7 @@ func expectMembers(t *testing.T, m *protostub.Message, expected map[string]bool)
 func parse(t *testing.T, source string, types int) *protostub.ProtoData {
 	p := protostub.New(strings.NewReader(source))
 
-	err := p.Parse()
-
-	if err != nil {
+	if err := p.Parse(); err != nil {
 		t.Fatal(err)
 	}
 
@@ -46,9 +44,8 @@ func TestVisitMessage(t *testing.T) {
 
 	for _, i := range proto {
 		v := protostub.New(strings.NewReader(i[0]))
-		err := v.Parse()
 
-		if err != nil {
+		if err := v.Parse(); err != nil {
 			t.Fatal(err)
 		}
 

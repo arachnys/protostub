@@ -48,16 +48,13 @@ func TestGeneration(t *testing.T) {
 
 		p := protostub.New(strings.NewReader(proto))
 
-		err := p.Parse()
-
-		if err != nil {
+		if err := p.Parse(); err != nil {
 			t.Fatal(err)
 		}
 
 		buf := bytes.NewBuffer(nil)
-		err = gen.Gen(buf, p)
 
-		if err != nil {
+		if err := gen.Gen(buf, p); err != nil {
 			t.Fatal(err)
 		}
 

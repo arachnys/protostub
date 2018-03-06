@@ -47,9 +47,7 @@ func serviceToClass(s *protostub.Service) *classData {
 
 // generate a mypy/python class
 func (g *generator) genClass(c *classData) error {
-	_, err := g.bw.WriteRune('\n')
-
-	if err != nil {
+	if _, err := g.bw.WriteRune('\n'); err != nil {
 		return err
 	}
 
@@ -65,11 +63,11 @@ func (g *generator) genClass(c *classData) error {
 		}
 	}
 
-	err = g.indent()
+	if err := g.indent(); err != nil {
+		return err
+	}
 
-	_, err = g.bw.WriteString(fmt.Sprintf("class %s:\n", c.name))
-
-	if err != nil {
+	if _, err := g.bw.WriteString(fmt.Sprintf("class %s:\n", c.name)); err != nil {
 		return err
 	}
 
@@ -87,22 +85,17 @@ func (g *generator) genClass(c *classData) error {
 			g.bw.WriteString(fmt.Sprintf("#%s\n", j))
 		}
 
-		err := g.indent()
-
-		if err != nil {
+		if err := g.indent(); err != nil {
 			return err
 		}
 
-		_, err = g.bw.WriteString(fmt.Sprintf("%s: %s", i.Name(), i.Typename()))
+		if _, err := g.bw.WriteString(fmt.Sprintf("%s: %s", i.Name(), i.Typename())); err != nil {
 
-		if err != nil {
 			return err
 		}
 
 		if n < len(c.members)-1 {
-			_, err = g.bw.WriteRune('\n')
-
-			if err != nil {
+			if _, err := g.bw.WriteRune('\n'); err != nil {
 				return err
 			}
 		}
@@ -114,22 +107,16 @@ func (g *generator) genClass(c *classData) error {
 			g.bw.WriteString(fmt.Sprintf("#%s\n", j))
 		}
 
-		err := g.indent()
-
-		if err != nil {
+		if err := g.indent(); err != nil {
 			return err
 		}
 
-		_, err = g.bw.WriteString(fmt.Sprintf("def %s: ...", i.Typename()))
-
-		if err != nil {
+		if _, err := g.bw.WriteString(fmt.Sprintf("def %s: ...", i.Typename())); err != nil {
 			return err
 		}
 
 		if n < len(c.functions)-1 {
-			_, err = g.bw.WriteRune('\n')
-
-			if err != nil {
+			if _, err := g.bw.WriteRune('\n'); err != nil {
 				return err
 			}
 		}
@@ -160,15 +147,11 @@ func (g *generator) genClass(c *classData) error {
 			}
 		}
 
-		err := g.indent()
-
-		if err != nil {
+		if err := g.indent(); err != nil {
 			return err
 		}
 
-		err = g.gen(i)
-
-		if err != nil {
+		if err := g.gen(i); err != nil {
 			return err
 		}
 	}

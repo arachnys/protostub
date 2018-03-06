@@ -25,9 +25,7 @@ func Gen(w io.Writer, p *protostub.ProtoData) error {
 	gen := &generator{0, bufio.NewWriter(w)}
 
 	for _, i := range p.Types {
-		err := gen.gen(i)
-
-		if err != nil {
+		if err := gen.gen(i); err != nil {
 			return err
 		}
 	}
@@ -40,9 +38,7 @@ func Gen(w io.Writer, p *protostub.ProtoData) error {
 func (g *generator) indent() error {
 	for i := 0; i < g.depth; i++ {
 		for j := 0; j < indentSize; j++ {
-			_, err := g.bw.WriteRune(' ')
-
-			if err != nil {
+			if _, err := g.bw.WriteRune(' '); err != nil {
 				return err
 			}
 		}
