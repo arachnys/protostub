@@ -1,4 +1,4 @@
-# protostub
+# protostub ![ci badge](https://travis-ci.org/arachnys/protostub.svg?branch=master)
 
 A tool for generating Mypy type stubs from a Protocol Buffer definition.
 
