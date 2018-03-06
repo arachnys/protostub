@@ -1,4 +1,4 @@
-package protostub
+package tests
 
 import (
 	"fmt"
@@ -13,9 +13,9 @@ func expectMembers(t *testing.T, m *protostub.Message, expected map[string]bool)
 		expected[fmt.Sprintf("%s %s", i.Typename(), i.Name())] = true
 	}
 
-	for _, v := range expected {
+	for k, v := range expected {
 		if !v {
-			t.Fatal("Not all members found")
+			t.Fatal("Not all members found. Failed to find", k)
 		}
 	}
 }
@@ -79,7 +79,7 @@ func TestMessageMembers(t *testing.T) {
 		"string thing":       false,
 		"string other_thing": false,
 		"Timestamp time":     false,
-		"uint64 number":      false,
+		"int number":         false,
 		"Bar bar":            false,
 	}
 

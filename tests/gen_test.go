@@ -1,4 +1,4 @@
-package protostub
+package tests
 
 import (
 	"bytes"
@@ -24,7 +24,7 @@ message Foo {
 // these are written without newlines or spaces
 // while this makes the tests less comprehensive, it also makes them **far** less
 // brittle and horrible to write.
-var simpleMypy = "classFoo:bar:stringbaz:int"
+var simpleMypy = "classFoo:bar:stringbaz:intdef__init__(self,bar:string=None,baz:int=None)->Foo:...defCopyFrom(self,other:Foo)->Any:...defListFields()->Tuple[FieldDescriptor,value]:..."
 
 var enumProto = `
 enum Foo {
@@ -34,7 +34,7 @@ enum Foo {
 }
 `
 
-var enumMypy = "classFoo:BAR:boolBAZ:boolQUUX:bool"
+var enumMypy = "classFoo:BAR:AnyBAZ:AnyQUUX:Anydef__init__(self,BAR:Any=None,BAZ:Any=None,QUUX:Any=None)->Foo:...defCopyFrom(self,other:Foo)->Any:...defListFields()->Tuple[FieldDescriptor,value]:..."
 
 var tests = [][]string{
 	{simpleProto, simpleMypy},
