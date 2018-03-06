@@ -10,5 +10,7 @@ RUN make
 
 FROM alpine:3.7
 
-COPY --from=0 /protostub/bin/protostub .
-ENTRYPOINT ["./protostub"]
+WORKDIR /protostub
+
+COPY --from=0 /protostub/bin/protostub /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/protostub"]
