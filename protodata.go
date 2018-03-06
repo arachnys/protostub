@@ -73,12 +73,6 @@ func TranslateType(t string) string {
 	return split[len(split)-1]
 }
 
-func (v *ProtoData) writeDepth(w io.Writer) {
-	for i := 0; i < v.depth; i++ {
-		w.Write([]byte("\t"))
-	}
-}
-
 func (v *ProtoData) VisitMessage(m *proto.Message) {
 	if m.Comment == nil {
 		m.Comment = &proto.Comment{Lines: make([]string, 0)}
