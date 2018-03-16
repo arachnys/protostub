@@ -16,6 +16,8 @@ type classData struct {
 	types     []protostub.ProtoType
 	extend    bool
 	comments  []string
+	hasValue  bool
+	hasName   bool
 }
 
 func messageToClass(m *protostub.Message) *classData {
@@ -30,8 +32,10 @@ func messageToClass(m *protostub.Message) *classData {
 
 func enumToClass(e *protostub.Enum) *classData {
 	return &classData{
-		name:    e.Typename(),
-		members: e.Members,
+		name:     e.Typename(),
+		members:  e.Members,
+		hasValue: true,
+		hasName:  true,
 	}
 }
 
@@ -137,6 +141,16 @@ func (g *generator) genClass(c *classData) error {
 	}
 
 	g.bw.WriteString(fmt.Sprintf(") -> %s: ...\n", c.name))
+
+	if c.hasName {
+		g.indent()
+		g.bw.WriteString(fmt.Sprintf("def Name(enumClass: %s) -> Any: ...\n", c.name))
+	}
+
+	if c.hasValue {
+		g.indent()
+		g.bw.WriteString("def Value(memberName: str) -> Any: ...\n")
+	}
 
 	for _, i := range c.types {
 		// enums need to be treated differently

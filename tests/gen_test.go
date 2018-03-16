@@ -34,7 +34,7 @@ enum Foo {
 }
 `
 
-var enumMypy = "classFoo:BAR:AnyBAZ:AnyQUUX:Anydef__init__(self,BAR:Any=None,BAZ:Any=None,QUUX:Any=None)->Foo:...defCopyFrom(self,other:Foo)->Any:...defListFields()->Tuple[FieldDescriptor,value]:..."
+var enumMypy = "classFoo:BAR:AnyBAZ:AnyQUUX:Anydef__init__(self,BAR:Any=None,BAZ:Any=None,QUUX:Any=None)->Foo:...defName(enumClass:Foo)->Any:...defValue(memberName:str)->Any:...defCopyFrom(self,other:Foo)->Any:...defListFields()->Tuple[FieldDescriptor,value]:..."
 
 var tests = [][]string{
 	{simpleProto, simpleMypy},
