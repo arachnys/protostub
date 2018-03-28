@@ -92,6 +92,21 @@ make
 
 The protostub binary should be in the `bin` folder.
 
+## How is this different to `mypy-protobuf`
+Protostub was created and used internally at Arachnys before mypy-protobuf was
+released as an open source project. We use it as part of our CI to try and catch
+issues before they make it into production. As such, it's very important that
+everything is dockerized - hence it's on Docker hub, so there's no dependency on
+Python or protoc.
+
+We also have out of the box Python 3 support, as that is what our codebase
+required.
+
+Our version is also completely standalone, and does not function as a plugin for
+protoc. While this means you only need one binary (statically linked with no
+dependencies), it does mean that it may not be quite as "correct" in terms of
+parsing protobuffers, or generating python code.
+
 ## License
 ```
 The MIT License (MIT)
