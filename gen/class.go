@@ -172,12 +172,12 @@ func (g *generator) genClass(c *classData) error {
 
 	// then we just need to generate all the default methods that protoc adds to
 	// python classes
-	defaults := []string{fmt.Sprintf("CopyFrom(self, other: %s) -> Any", c.name), "ListFields() -> Tuple[FieldDescriptor, value]"}
-
-	for _, i := range defaults {
-		g.indent()
-		g.bw.WriteString(fmt.Sprintf("def %s: ...\n", i))
-	}
+	g.indent()
+	g.bw.WriteString(fmt.Sprintf("def CopyFrom(self, other: %s) -> None: ...\n", c.name))
+	g.indent()
+	g.bw.WriteString("@staticmethod\n")
+	g.indent()
+	g.bw.WriteString("def ListFields() -> Tuple[FieldDescriptor, value]: ...\n")
 
 	return nil
 }
