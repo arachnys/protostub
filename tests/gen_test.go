@@ -62,6 +62,7 @@ func TestGeneration(t *testing.T) {
 		generated := strings.Replace(strings.Replace(buf.String(), " ", "", -1), "\n", "", -1)
 
 		if generated != mypy {
+			fmt.Println(mypy)
 			fmt.Println(generated)
 			t.Fatal("Failed to generate correct code, got:\n", generated)
 		}
