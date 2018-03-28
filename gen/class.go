@@ -144,12 +144,12 @@ func (g *generator) genClass(c *classData) error {
 
 	if c.hasName {
 		g.indent()
-		g.bw.WriteString(fmt.Sprintf("def Name(enumClass: %s) -> Any: ...\n", c.name))
+		g.bw.WriteString(fmt.Sprintf("def Name(number: int) -> str: ...\n", c.name))
 	}
 
 	if c.hasValue {
 		g.indent()
-		g.bw.WriteString("def Value(memberName: str) -> Any: ...\n")
+		g.bw.WriteString("def Value(name: str) -> int: ...\n")
 	}
 
 	for _, i := range c.types {
@@ -157,7 +157,7 @@ func (g *generator) genClass(c *classData) error {
 		if e, ok := i.(*protostub.Enum); ok {
 			for _, j := range e.Members {
 				g.indent()
-				g.bw.WriteString(fmt.Sprintf("%s: Any\n", j.Name()))
+				g.bw.WriteString(fmt.Sprintf("%s: int\n", j.Name()))
 			}
 		}
 
