@@ -16,8 +16,8 @@ import (
 
 var simpleProto = `
 message Foo {
-    string bar = 1;
-    int32 baz = 2;
+	string bar = 1;
+	int32 baz = 2;
 }
 `
 
@@ -30,11 +30,11 @@ var enumProto = `
 enum Foo {
 	BAR = 0;
 	BAZ = 1;
-	QUUX = 2;
+	QUUX = 5;
 }
 `
 
-var enumMypy = "fromtypingimportcast,Dict,List,TupleclassFoo:BAR:AnyBAZ:AnyQUUX:Anydef__init__(self,BAR:Any=None,BAZ:Any=None,QUUX:Any=None)->Foo:...defName(enumClass:Foo)->Any:...defValue(memberName:str)->Any:...defCopyFrom(self,other:Foo)->None:...@staticmethoddefListFields()->Tuple[FieldDescriptor,value]:..."
+var enumMypy = "fromtypingimportcast,Dict,List,TupleclassFoo:BAR=cast(Foo,0)BAZ=cast(Foo,1)QUUX=cast(Foo,5)@staticmethoddefName(number:Foo)->str:...@staticmethoddefValue(name:str)->Foo:...defCopyFrom(self,other:Foo)->None:...@staticmethoddefListFields()->Tuple[FieldDescriptor,value]:..."
 
 var tests = [][]string{
 	{simpleProto, simpleMypy},

@@ -51,6 +51,7 @@ type Service struct {
 type Enum struct {
 	name    string
 	Members []Member
+	Values  []int
 }
 
 // Name returns the name of the member

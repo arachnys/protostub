@@ -14,10 +14,12 @@ type classData struct {
 	members   []protostub.Member
 	functions []protostub.Function
 	types     []protostub.ProtoType
+	values    []int
 	extend    bool
 	comments  []string
 	hasValue  bool
 	hasName   bool
+	noInit    bool
 }
 
 func messageToClass(m *protostub.Message) *classData {
@@ -34,8 +36,10 @@ func enumToClass(e *protostub.Enum) *classData {
 	return &classData{
 		name:     e.Typename(),
 		members:  e.Members,
+		values:   e.Values,
 		hasValue: true,
 		hasName:  true,
+		noInit:   true,
 	}
 }
 
@@ -93,9 +97,15 @@ func (g *generator) genClass(c *classData) error {
 			return err
 		}
 
-		if _, err := g.bw.WriteString(fmt.Sprintf("%s: %s", i.Name(), i.Typename())); err != nil {
-
-			return err
+		// enums need to be treated differently
+		if c.values != nil {
+			if _, err := g.bw.WriteString(fmt.Sprintf("%s = cast(%s, %d)", i.Name(), c.name, c.values[n])); err != nil {
+				return err
+			}
+		} else {
+			if _, err := g.bw.WriteString(fmt.Sprintf("%s: %s", i.Name(), i.Typename())); err != nil {
+				return err
+			}
 		}
 
 		if n < len(c.members)-1 {
@@ -126,38 +136,47 @@ func (g *generator) genClass(c *classData) error {
 		}
 	}
 
-	// let's make that constructor
 	g.bw.WriteRune('\n')
-	g.indent()
-	g.bw.WriteString("def __init__(self, ")
 
-	for n, i := range c.members {
-		if n < len(c.members)-1 {
-			g.bw.WriteString(fmt.Sprintf("%s: %s = None, ", i.Name(), i.Typename()))
-			continue
+	// let's make that constructor
+	if !c.noInit {
+		g.indent()
+		g.bw.WriteString("def __init__(self, ")
+
+		for n, i := range c.members {
+			if n < len(c.members)-1 {
+				g.bw.WriteString(fmt.Sprintf("%s: %s = None, ", i.Name(), i.Typename()))
+				continue
+			}
+
+			g.bw.WriteString(fmt.Sprintf("%s: %s = None", i.Name(), i.Typename()))
 		}
 
-		g.bw.WriteString(fmt.Sprintf("%s: %s = None", i.Name(), i.Typename()))
+		g.bw.WriteString(fmt.Sprintf(") -> %s: ...\n", c.name))
 	}
-
-	g.bw.WriteString(fmt.Sprintf(") -> %s: ...\n", c.name))
 
 	if c.hasName {
 		g.indent()
-		g.bw.WriteString(fmt.Sprintf("def Name(number: int) -> str: ...\n", c.name))
+		g.bw.WriteString("@staticmethod\n")
+
+		g.indent()
+		g.bw.WriteString(fmt.Sprintf("def Name(number: %s) -> str: ...\n", c.name))
 	}
 
 	if c.hasValue {
 		g.indent()
-		g.bw.WriteString("def Value(name: str) -> int: ...\n")
+		g.bw.WriteString("@staticmethod\n")
+
+		g.indent()
+		g.bw.WriteString(fmt.Sprintf("def Value(name: str) -> %s: ...\n", c.name))
 	}
 
 	for _, i := range c.types {
 		// enums need to be treated differently
 		if e, ok := i.(*protostub.Enum); ok {
-			for _, j := range e.Members {
+			for n, j := range e.Members {
 				g.indent()
-				g.bw.WriteString(fmt.Sprintf("%s: int\n", j.Name()))
+				g.bw.WriteString(fmt.Sprintf("%s = cast(%s, %d)\n", j.Name(), c.name, e.Values[n]))
 			}
 		}
 

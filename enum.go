@@ -20,9 +20,9 @@ func NewEnumVisitor() *EnumVisitor {
 
 // VisitEnumField creates an enum field to the member list
 func (ev *EnumVisitor) VisitEnumField(e *proto.EnumField) {
-	// using the Any type because of this:
-	// https://github.com/python/typeshed/blob/master/stdlib/3.4/enum.pyi#L31
-	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, "Any", nil})
+	// protobufs only uses integers for enum values
+	ev.Enum.Members = append(ev.Enum.Members, Member{e.Name, ev.Enum.name, nil})
+	ev.Enum.Values = append(ev.Enum.Values, e.Integer)
 }
 
 // VisitEnum will set the correct name and visit the elements
