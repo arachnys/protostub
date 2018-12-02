@@ -73,8 +73,8 @@ func TestMessageMembers(t *testing.T) {
 	p := parse(t, proto, 1)
 
 	results := map[string]bool{
-		"string thing":       false,
-		"string other_thing": false,
+		"str thing":          false,
+		"str other_thing":    false,
 		"Timestamp time":     false,
 		"int number":         false,
 		"Bar bar":            false,

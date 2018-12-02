@@ -62,7 +62,8 @@ var typeMap = map[string]string{
 	"fixed64":  "int",
 	"sfixed32": "int",
 	"sfixed64": "int",
-	"bytes":    "str",
+	"bytes":    "bytes",
+	"string":   "str",
 }
 
 // TranslateType takes in a protobuf type and translates it to a Python primitive
